@@ -17,7 +17,7 @@
 
 <br>
 
-[🌐 Live Demo](https://blogify-jitt.onrender.com) · [🐛 Report Bug](https://github.com/prasenjitshinde27-byte/BLOGIFY/issues) · [💡 Request Feature](https://github.com/prasenjitshinde27-byte/BLOGIFY/issues)
+[🌐 Live Demo](https://blogify-jitt.onrender.com) · [🐛 Report Bug](https://github.com/prasenjitshinde11/BLOGIFY/issues) · [💡 Request Feature](https://github.com/prasenjitshinde11/BLOGIFY/issues)
 
 ---
 
@@ -190,7 +190,7 @@ Blogify follows the **Application Factory** pattern with **Flask Blueprints** fo
 **1. Clone the repository**
 
 ```bash
-git clone https://github.com/prasenjitshinde27-byte/BLOGIFY.git
+git clone https://github.com/prasenjitshinde11/BLOGIFY.git
 cd BLOGIFY
 ```
 
@@ -462,9 +462,9 @@ Distributed under the **MIT License**. See `LICENSE` for more information.
 
 ## 📬 Contact
 
-**Prasenjit Shinde** — [@prasenjitshinde27-byte](https://github.com/prasenjitshinde27-byte)
+**Prasenjit Shinde** — [@prasenjitshinde11](https://github.com/prasenjitshinde11)
 
-Project Link: [https://github.com/prasenjitshinde27-byte/BLOGIFY](https://github.com/prasenjitshinde27-byte/BLOGIFY)
+Project Link: [https://github.com/prasenjitshinde11/BLOGIFY](https://github.com/prasenjitshinde11/BLOGIFY)
 
 ---
 
