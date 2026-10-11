@@ -1,25 +1,27 @@
 <div align="center">
 
-# ⛓️ BlockNova
+# 📝 Blogify
 
-### A Production-Grade Blockchain Simulation Built from Scratch
+### A Production-Ready Blogging Platform with Full Authentication & Social Features
 
 [![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
-[![Flask](https://img.shields.io/badge/Flask-3.x-000000?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com)
-[![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)](https://www.sqlite.org)
-[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
+[![Flask](https://img.shields.io/badge/Flask-3.1-000000?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org)
+[![Render](https://img.shields.io/badge/Deployed_on-Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://blogify-jitt.onrender.com)
 
-*Full-stack blockchain with SHA-256 Proof of Work, RSA wallet generation, cryptographically signed transactions, real-time dashboard, and a REST API — all in Python.*
+*Full-stack blog with Bcrypt auth, AJAX likes, email password reset, avatar uploads, full-text search, and PostgreSQL — deployed on Render.*
 
-[Features](#-features) · [Architecture](#-architecture) · [Quick Start](#-quick-start) · [API Reference](#-api-reference) · [Tech Stack](#-tech-stack)
+[Live Demo](https://blogify-jitt.onrender.com) · [Features](#-features) · [Architecture](#-architecture) · [Quick Start](#-quick-start) · [Tech Stack](#-tech-stack)
 
 </div>
 
 ---
 
-## 🎯 Why BlockNova?
+## 🎯 Why Blogify?
 
-Most blockchain tutorials stop at theory. **BlockNova** is a fully functional blockchain node you can run locally — complete with cryptographic wallets, digitally signed transactions, PoW consensus, and a live analytics dashboard. It's designed to demonstrate real-world blockchain engineering concepts through clean, production-quality code.
+Building a real-world web application means handling **authentication**, **authorization**, **file uploads**, **email services**, **database migrations**, and **deployment** — all at once. **Blogify** tackles every one of these concerns in a clean, modular Flask codebase using industry-standard patterns like the Application Factory and Blueprint architecture.
+
+> 🌐 **Live Demo:** [blogify-jitt.onrender.com](https://blogify-jitt.onrender.com)
 
 ---
 
@@ -27,13 +29,14 @@ Most blockchain tutorials stop at theory. **BlockNova** is a fully functional bl
 
 | Category | Details |
 |---|---|
-| 🔗 **Blockchain Core** | Genesis block auto-creation · SHA-256 hashing with sorted JSON encoding · Chain integrity validation |
-| ⛏️ **Proof of Work** | Configurable difficulty (4-leading-zero target) · Nonce discovery · Full hash verification |
-| 🔐 **Cryptographic Wallets** | RSA-2048 key pair generation · PKCS#1 v1.5 digital signatures · Server-side transaction signing |
-| 💰 **Transactions** | Cryptographic signature verification · Real-time balance tracking per address · Transaction pool management |
-| 🌐 **REST API** | Mine blocks · Submit transactions · Query chain · Register peer nodes |
-| 📊 **Live Dashboard** | Chain statistics · Block growth chart · Transaction volume visualization · Wallet management panel |
-| 💾 **Persistence** | SQLAlchemy ORM · SQLite storage for blocks & transactions |
+| 🔐 **Authentication** | Registration · Bcrypt password hashing · Flask-Login session management · CSRF protection |
+| 📧 **Password Reset** | Time-limited email tokens via `itsdangerous` · SMTP integration via Flask-Mail |
+| ✍️ **Content Management** | Full CRUD for blog posts · Rich text editing · Draft management |
+| 💬 **Social Interactions** | Comments on posts · AJAX-powered like system (no page reload) |
+| 👤 **User Profiles** | Avatar upload & processing (Pillow) · Profile editing · Account management |
+| 🔍 **Discovery** | Full-text post search · Welcome landing page with platform statistics |
+| 🗄️ **Database** | SQLAlchemy ORM · Flask-Migrate for schema migrations · SQLite (dev) / PostgreSQL (prod) |
+| 🚀 **Deployment** | Gunicorn WSGI · ProxyFix for HTTPS behind reverse proxy · Environment-based config |
 
 ---
 
@@ -41,28 +44,31 @@ Most blockchain tutorials stop at theory. **BlockNova** is a fully functional bl
 
 ```
 ┌──────────────────────────────────────────────────────┐
-│                   Browser (Dashboard)                │
-│         Charts · Wallet Panel · Transaction UI       │
+│                    Browser Client                     │
+│          Read Posts · Like · Comment · Search         │
 └──────────────────────┬───────────────────────────────┘
-                       │ HTTP
+                       │ HTTPS
 ┌──────────────────────▼───────────────────────────────┐
-│                  Flask REST API (app.py)              │
-│     /mine  /transactions  /chain  /wallet  /nodes    │
+│              Gunicorn WSGI Server                     │
+│                   (Production)                        │
 └──────────────────────┬───────────────────────────────┘
                        │
 ┌──────────────────────▼───────────────────────────────┐
-│             Blockchain Engine (blockchain.py)         │
-│      Block Creation · PoW · Chain Validation         │
-├──────────────────┬───────────────────────────────────┤
-│  core/crypto.py  │         core/database.py          │
-│  RSA Wallets     │         SQLAlchemy Models          │
-│  Sign & Verify   │         Block & Tx Persistence     │
-└──────────────────┴───────────────┬───────────────────┘
-                                   │
-                        ┌──────────▼──────────┐
-                        │   SQLite Database    │
-                        │  (blockchain.db)     │
-                        └─────────────────────┘
+│          Flask Application (Factory Pattern)          │
+│                fast.py → create_app()                │
+├──────────────┬──────────────────┬────────────────────┤
+│  Blueprint:  │   Blueprint:     │   Blueprint:       │
+│    main      │     users        │     posts          │
+│  Home, Feed  │  Auth, Profile   │  CRUD, Comments    │
+│  Search      │  Password Reset  │  Likes             │
+└──────────────┴────────┬─────────┴────────────────────┘
+                        │
+┌───────────────────────▼──────────────────────────────┐
+│              SQLAlchemy ORM Layer                     │
+│     Models: User · Post · Comment · Like             │
+├──────────────────────┬───────────────────────────────┤
+│   SQLite (dev)       │      PostgreSQL (prod)        │
+└──────────────────────┴───────────────────────────────┘
 ```
 
 ---
@@ -71,8 +77,8 @@ Most blockchain tutorials stop at theory. **BlockNova** is a fully functional bl
 
 ```bash
 # Clone the repository
-git clone https://github.com/prasenjitshinde11/blocknova.git
-cd blocknova
+git clone https://github.com/prasenjitshinde11/blogify.git
+cd blogify
 
 # Create virtual environment
 python -m venv venv
@@ -81,24 +87,18 @@ source venv/bin/activate  # Windows: venv\Scripts\activate
 # Install dependencies
 pip install -r requirements.txt
 
-# Run the blockchain node
-python app.py
+# Set environment variables
+export SECRET_KEY="your-secret-key"
+export SQLALCHEMY_DATABASE_URI="sqlite:///site.db"
+
+# Initialize the database
+flask db upgrade
+
+# Run the development server
+python fast.py
 ```
 
-Open `http://127.0.0.1:5000` in your browser to access the dashboard.
-
----
-
-## 📡 API Reference
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/chain` | Returns the full blockchain |
-| `GET` | `/mine` | Mines a new block with pending transactions |
-| `POST` | `/transactions/new` | Submits a new signed transaction |
-| `POST` | `/wallet/new` | Generates a new RSA wallet keypair |
-| `GET` | `/wallet/balance/<address>` | Returns balance for a given wallet |
-| `POST` | `/nodes/register` | Registers a new peer node |
+Open `http://127.0.0.1:5000` — you'll see the welcome landing page.
 
 ---
 
@@ -107,26 +107,33 @@ Open `http://127.0.0.1:5000` in your browser to access the dashboard.
 | Layer | Technology |
 |-------|------------|
 | **Language** | Python 3.10+ |
-| **Web Framework** | Flask |
-| **Cryptography** | PyCryptodome (RSA-2048, PKCS#1 v1.5) |
-| **Database** | SQLite + SQLAlchemy ORM |
-| **Frontend** | Jinja2 Templates, Chart.js |
-| **Hashing** | SHA-256 (hashlib) |
+| **Framework** | Flask 3.1 (Application Factory + Blueprints) |
+| **ORM** | SQLAlchemy + Flask-Migrate (Alembic) |
+| **Auth** | Flask-Login + Flask-Bcrypt |
+| **Security** | Flask-WTF (CSRF) · `itsdangerous` (timed tokens) |
+| **Email** | Flask-Mail (SMTP) |
+| **Media** | Pillow (image processing for avatars) |
+| **Database** | SQLite (dev) · PostgreSQL (prod) |
+| **WSGI** | Gunicorn |
+| **Deployment** | Render |
+| **Frontend** | Jinja2 · Bootstrap · JavaScript (AJAX) |
 
 ---
 
 ## 📁 Project Structure
 
 ```
-blocknova/
-├── app.py              # Flask routes & REST API
-├── blockchain.py       # Block creation, PoW, chain validation
-├── core/
-│   ├── crypto.py       # RSA wallet generation, signing, verification
-│   └── database.py     # SQLAlchemy models & DB config
-├── templates/          # Jinja2 frontend templates
-├── static/             # CSS, JS, Chart.js assets
-├── requirements.txt    # Python dependencies
+blogify/
+├── fast.py                 # Entry point + ProxyFix
+├── config.py               # Environment-based configuration
+├── models.py               # SQLAlchemy models (User, Post, Comment, Like)
+├── main/                   # Blueprint: Home feed, search, landing page
+├── users/                  # Blueprint: Auth, profile, password reset
+├── posts/                  # Blueprint: CRUD, comments, likes
+├── templates/              # Jinja2 templates
+├── static/                 # CSS, JS, uploaded avatars
+├── migrations/             # Flask-Migrate (Alembic) migrations
+├── requirements.txt
 └── README.md
 ```
 
@@ -134,11 +141,12 @@ blocknova/
 
 ## 🔑 Key Engineering Decisions
 
-- **RSA-2048 for wallet security** — Industry-standard asymmetric encryption for transaction signing
-- **PKCS#1 v1.5 signatures** — Deterministic signing scheme for transaction integrity
-- **SHA-256 with sorted JSON** — Ensures consistent block hashing regardless of key ordering
-- **SQLAlchemy ORM** — Clean data layer with easy migration to PostgreSQL for production
-- **Blueprint-ready Flask** — Modular architecture prepared for horizontal scaling
+- **Application Factory Pattern** — Enables testing with multiple app instances and clean configuration management
+- **Blueprint Architecture** — Separates concerns (users, posts, main) for maintainability and team scalability
+- **Bcrypt + Timed Tokens** — Industry-standard password hashing and secure, expirable reset links
+- **AJAX Likes** — Smooth UX with no page reloads, demonstrating async frontend-backend communication
+- **ProxyFix Middleware** — Correct HTTPS handling behind Render's reverse proxy for production security
+- **Dual Database Support** — SQLite for rapid development, PostgreSQL for production via `DATABASE_URL`
 
 ---
 
