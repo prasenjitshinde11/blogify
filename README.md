@@ -1,175 +1,158 @@
-# BLOGIFY
+<div align="center">
 
-A full-featured blogging web application built with Flask, featuring user authentication, post management, comments, likes, avatar uploads, and password reset via email.
+# ⛓️ BlockNova
 
-## Problem
+### A Production-Grade Blockchain Simulation Built from Scratch
 
-Building a blogging platform that handles user accounts, content management, and social interactions (likes, comments) while maintaining security and being deployable to a production server.
+[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![Flask](https://img.shields.io/badge/Flask-3.x-000000?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com)
+[![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)](https://www.sqlite.org)
+[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
-## Solution
+*Full-stack blockchain with SHA-256 Proof of Work, RSA wallet generation, cryptographically signed transactions, real-time dashboard, and a REST API — all in Python.*
 
-BLOGIFY is a Flask web application using the application factory pattern and Blueprint architecture. It provides a complete blogging experience — users can register, write posts, interact via comments and likes, manage their profile, and reset their password via email.
+[Features](#-features) · [Architecture](#-architecture) · [Quick Start](#-quick-start) · [API Reference](#-api-reference) · [Tech Stack](#-tech-stack)
 
-## Features
+</div>
 
-- User registration and login with Bcrypt password hashing
-- Session management via Flask-Login
-- Create, read, update, and delete blog posts
-- Comment on posts
-- AJAX-powered post likes
-- Profile avatar upload and management (Pillow)
-- Password reset via time-limited email tokens (itsdangerous)
-- CSRF protection on all forms (Flask-WTF)
-- Full-text post search
-- Database migrations with Flask-Migrate
-- Blueprint architecture (users, posts, main)
-- Application factory pattern
-- ProxyFix for correct HTTPS handling behind Render's reverse proxy
-- Welcome landing page for unauthenticated visitors showing platform stats
+---
 
-## Architecture
+## 🎯 Why BlockNova?
 
-```
-Browser
-   ↓
-Gunicorn (WSGI server)
-   ↓
-fast.py (entry point + ProxyFix)
-   ↓
-Flask App (create_app factory)
-   ↓
-Blueprints: main / users / posts
-   ↓
-SQLAlchemy ORM
-   ↓
-SQLite (dev) / PostgreSQL (prod via DATABASE_URL)
-```
+Most blockchain tutorials stop at theory. **BlockNova** is a fully functional blockchain node you can run locally — complete with cryptographic wallets, digitally signed transactions, PoW consensus, and a live analytics dashboard. It's designed to demonstrate real-world blockchain engineering concepts through clean, production-quality code.
 
-**Blueprints:**
-- `main` — home feed, welcome page, search
-- `users` — register, login, logout, profile, account update, password reset
-- `posts` — create, view, edit, delete posts, comments, likes
+---
 
-**Models:** `User`, `Post`, `Comment`, `Like`
+## ✨ Features
 
-## Tech Stack
+| Category | Details |
+|---|---|
+| 🔗 **Blockchain Core** | Genesis block auto-creation · SHA-256 hashing with sorted JSON encoding · Chain integrity validation |
+| ⛏️ **Proof of Work** | Configurable difficulty (4-leading-zero target) · Nonce discovery · Full hash verification |
+| 🔐 **Cryptographic Wallets** | RSA-2048 key pair generation · PKCS#1 v1.5 digital signatures · Server-side transaction signing |
+| 💰 **Transactions** | Cryptographic signature verification · Real-time balance tracking per address · Transaction pool management |
+| 🌐 **REST API** | Mine blocks · Submit transactions · Query chain · Register peer nodes |
+| 📊 **Live Dashboard** | Chain statistics · Block growth chart · Transaction volume visualization · Wallet management panel |
+| 💾 **Persistence** | SQLAlchemy ORM · SQLite storage for blocks & transactions |
 
-**Backend**
-- Python
-- Flask 3.1.3
-- Flask-SQLAlchemy 3.1.1
-- Flask-Migrate 4.0.5
-- Flask-Bcrypt 1.0.1
-- Flask-Login 0.6.3
-- Flask-WTF 1.2.1
-- Flask-Mail 0.9.1
-- itsdangerous (JWT-style password reset tokens)
-- Pillow (avatar image processing)
-- Gunicorn 23.0.0
+---
 
-**Database**
-- SQLite (local development)
-- PostgreSQL (production via `DATABASE_URL`)
-
-**Frontend**
-- Jinja2 templates
-- Custom CSS (glassmorphic UI)
-
-**Deployment**
-- Render (render.yaml)
-
-## Project Structure
+## 🏗️ Architecture
 
 ```
-BLOGIFY/
-├── fast.py                   # Entry point — create_app() + ProxyFix
-├── render.yaml               # Render deployment config
-├── requirements.txt
-├── flaskblog/
-│   ├── __init__.py           # App factory, extensions init
-│   ├── config.py             # Config class — reads env vars
-│   ├── models.py             # User, Post, Comment, Like models
-│   ├── main/
-│   │   └── routes.py         # Home feed, search, welcome page
-│   ├── users/
-│   │   ├── routes.py         # Register, login, profile, password reset
-│   │   ├── forms.py
-│   │   └── utils.py          # Avatar save, reset email sender
-│   └── posts/
-│       ├── routes.py         # Post CRUD, comments, likes
-│       └── forms.py
-└── tests/                    # Directory exists — no tests implemented yet
+┌──────────────────────────────────────────────────────┐
+│                   Browser (Dashboard)                │
+│         Charts · Wallet Panel · Transaction UI       │
+└──────────────────────┬───────────────────────────────┘
+                       │ HTTP
+┌──────────────────────▼───────────────────────────────┐
+│                  Flask REST API (app.py)              │
+│     /mine  /transactions  /chain  /wallet  /nodes    │
+└──────────────────────┬───────────────────────────────┘
+                       │
+┌──────────────────────▼───────────────────────────────┐
+│             Blockchain Engine (blockchain.py)         │
+│      Block Creation · PoW · Chain Validation         │
+├──────────────────┬───────────────────────────────────┤
+│  core/crypto.py  │         core/database.py          │
+│  RSA Wallets     │         SQLAlchemy Models          │
+│  Sign & Verify   │         Block & Tx Persistence     │
+└──────────────────┴───────────────┬───────────────────┘
+                                   │
+                        ┌──────────▼──────────┐
+                        │   SQLite Database    │
+                        │  (blockchain.db)     │
+                        └─────────────────────┘
 ```
 
-## Getting Started
+---
 
-### Prerequisites
-
-- Python 3.10+
-- A Gmail account (or SMTP provider) for password reset emails
-
-### Installation
+## 🚀 Quick Start
 
 ```bash
-git clone https://github.com/prasenjitshinde11/BLOGIFY.git
-cd BLOGIFY
+# Clone the repository
+git clone https://github.com/prasenjitshinde11/blocknova.git
+cd blocknova
+
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+
+# Install dependencies
 pip install -r requirements.txt
+
+# Run the blockchain node
+python app.py
 ```
 
-## Environment Variables
+Open `http://127.0.0.1:5000` in your browser to access the dashboard.
 
-Create a `.env` file in the project root:
+---
 
-```env
-SECRET_KEY=your-secret-key-here
-DATABASE_URL=sqlite:///site.db
-MAIL_USERNAME=your-email@gmail.com
-MAIL_PASSWORD=your-email-app-password
+## 📡 API Reference
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/chain` | Returns the full blockchain |
+| `GET` | `/mine` | Mines a new block with pending transactions |
+| `POST` | `/transactions/new` | Submits a new signed transaction |
+| `POST` | `/wallet/new` | Generates a new RSA wallet keypair |
+| `GET` | `/wallet/balance/<address>` | Returns balance for a given wallet |
+| `POST` | `/nodes/register` | Registers a new peer node |
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|-------|------------|
+| **Language** | Python 3.10+ |
+| **Web Framework** | Flask |
+| **Cryptography** | PyCryptodome (RSA-2048, PKCS#1 v1.5) |
+| **Database** | SQLite + SQLAlchemy ORM |
+| **Frontend** | Jinja2 Templates, Chart.js |
+| **Hashing** | SHA-256 (hashlib) |
+
+---
+
+## 📁 Project Structure
+
+```
+blocknova/
+├── app.py              # Flask routes & REST API
+├── blockchain.py       # Block creation, PoW, chain validation
+├── core/
+│   ├── crypto.py       # RSA wallet generation, signing, verification
+│   └── database.py     # SQLAlchemy models & DB config
+├── templates/          # Jinja2 frontend templates
+├── static/             # CSS, JS, Chart.js assets
+├── requirements.txt    # Python dependencies
+└── README.md
 ```
 
-> **Note:** Never commit your real `.env` file. Generate `SECRET_KEY` with:
-> ```bash
-> python -c "import secrets; print(secrets.token_hex(32))"
-> ```
+---
 
-## Running Locally
+## 🔑 Key Engineering Decisions
 
-```bash
-# Apply database migrations
-flask db upgrade
+- **RSA-2048 for wallet security** — Industry-standard asymmetric encryption for transaction signing
+- **PKCS#1 v1.5 signatures** — Deterministic signing scheme for transaction integrity
+- **SHA-256 with sorted JSON** — Ensures consistent block hashing regardless of key ordering
+- **SQLAlchemy ORM** — Clean data layer with easy migration to PostgreSQL for production
+- **Blueprint-ready Flask** — Modular architecture prepared for horizontal scaling
 
-# Run the development server
-flask run
-```
+---
 
-Open `http://localhost:5000` in your browser.
+## 📬 Contact
 
-## Demo
+**Prasenjit Shinde** — CS Undergrad @ SIRT Bhopal
 
-Live at: https://blogify-jitt.onrender.com
+[![GitHub](https://img.shields.io/badge/GitHub-prasenjitshinde11-181717?style=flat-square&logo=github)](https://github.com/prasenjitshinde11)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-prasenjitshinde11-0A66C2?style=flat-square&logo=linkedin)](https://linkedin.com/in/prasenjitshinde11)
 
-## Deployment
+---
 
-Deployed on **Render** via `render.yaml`:
-- **Build command:** `pip install -r requirements.txt`
-- **Start command:** `gunicorn fast:app`
+<div align="center">
 
-`fast.py` applies `ProxyFix` so Flask correctly handles HTTPS behind Render's reverse proxy.
+**If you found this project useful, consider giving it a ⭐**
 
-## Testing
-
-No automated tests are currently implemented. A `tests/` directory exists but is empty.
-
-## Future Improvements
-
-- Write actual unit and integration tests using pytest
-- Fix `Pillow==1` pin in requirements.txt (should be `Pillow==10.x`)
-- Add GitHub Actions CI/CD pipeline
-- Add `.env.example` file
-- Add a Dockerfile for containerised deployment
-- Add `.gitattributes` to correct language detection (currently shows HTML instead of Python)
-- Switch to PostgreSQL in local development to match production
-
-## Author
-
-**Prasenjit Shinde**
+</div>
